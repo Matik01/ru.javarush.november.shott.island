@@ -24,12 +24,9 @@ public class LocationSetting {
     }
 
     private void fillIsland() {
-        ArrayList<Location> newIsland = new ArrayList<>(island.subList(1, island.size()));
-        HashMap<Animal, Integer> wolfCount = island.get(0).getAnimalCount();
-        Wolf wolf = new Wolf();
-        wolfCount.put(wolf, 1);
+        ArrayList<Location> viewIsland = new ArrayList<>(island.subList(0, island.size()));
 
-        for (Location location : newIsland) {
+        for (Location location : viewIsland) {
             HashMap<Animal, Integer> animalCount = location.getAnimalCount();
             HashMap<Plant, Integer> plantCount = location.getPlantCount();
 
@@ -59,7 +56,8 @@ public class LocationSetting {
     }
 
     private Animal herbivoreToCreate(){
-        ArrayList<Animal> listOfAnimals = new ArrayList<>(List.of(new Boar(), new Buffalo(), new Bunny(), new Caterpillar(), new Deer(), new Duck(), new Goat(), new Horse(), new Mouse(), new Sheep()));
+        ArrayList<Animal> listOfAnimals = new ArrayList<>(List.of(new Boar(), new Buffalo(), new Bunny(), new Caterpillar(),
+                                                                    new Deer(), new Duck(), new Goat(), new Horse(), new Mouse(), new Sheep()));
         int bound = listOfAnimals.size();
         return listOfAnimals.get(ThreadLocalRandom.current().nextInt(bound));
     }
@@ -68,9 +66,11 @@ public class LocationSetting {
     public void run() {
         createIsland();
         fillIsland();
-        for (Location location : island) {
-            System.out.println("X:" + location.getCoordX() + " Y:" + location.getCoordY() + " Animals: " + location.getAnimalCount() + "Plants: " + location.getPlantCount());
-        }
+
         System.out.println("Created island");
+    }
+
+    public ArrayList<Location> getIsland() {
+        return island;
     }
 }

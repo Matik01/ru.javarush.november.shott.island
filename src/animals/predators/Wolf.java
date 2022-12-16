@@ -1,8 +1,11 @@
 package animals.predators;
 
 import animals.Animal;
+import location.Location;
 import resources.AnimalSetting;
 import animals.Predator;
+
+import java.util.Objects;
 
 public class Wolf extends Predator {
     private AnimalSetting baseSetting;
@@ -15,22 +18,39 @@ public class Wolf extends Predator {
 
     @Override
     public void eat(Animal animal) {
-        System.out.println("Eat" + animal);
+
     }
 
     @Override
     public void move() {
+
     }
 
     @Override
     public void reproduce() {
+
     }
 
     @Override
     public void dying() {
+
     }
+
     @Override
     public AnimalSetting getBaseSetting() {
         return baseSetting;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Wolf wolf = (Wolf) o;
+        return satiety == wolf.satiety && moves == wolf.moves && Objects.equals(baseSetting, wolf.baseSetting);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(baseSetting, satiety, moves);
     }
 }
