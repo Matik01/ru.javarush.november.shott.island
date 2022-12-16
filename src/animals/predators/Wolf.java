@@ -1,7 +1,6 @@
 package animals.predators;
 
 import animals.Animal;
-import location.Location;
 import resources.AnimalSetting;
 import animals.Predator;
 
@@ -18,7 +17,7 @@ public class Wolf extends Predator {
 
     @Override
     public void eat(Animal animal) {
-
+        System.out.println("Wolf eating " + animal);
     }
 
     @Override

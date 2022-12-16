@@ -1,6 +1,5 @@
 package animals.herbivores;
 
-import animals.Animal;
 import animals.Herbivore;
 import plants.Plant;
 import resources.AnimalSetting;
