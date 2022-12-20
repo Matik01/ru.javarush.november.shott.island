@@ -15,11 +15,10 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class LocationSetting extends SimulationSetting{
     private ArrayList<Location> island = new ArrayList<>();
-    private SimulationSetting simulationSetting = new SimulationSetting();
 
     private void createIsland() {
-        for (int i = 0; i < simulationSetting.getMaxX(); i++) {
-            for (int j = 0; j < simulationSetting.getMaxY(); j++) {
+        for (int i = 0; i < SimulationSetting.getMaxX(); i++) {
+            for (int j = 0; j < SimulationSetting.getMaxY(); j++) {
                 island.add(new Location(i, j));
             }
         }

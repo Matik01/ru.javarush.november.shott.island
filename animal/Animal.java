@@ -3,72 +3,28 @@ package animal;
 import location.Location;
 import resources.AnimalSetting;
 import resources.SimulationSetting;
-
-import java.security.KeyPair;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.ThreadLocalRandom;
+import util.Direction;
 
 public abstract class Animal {
     public abstract AnimalSetting getBaseSetting();
-    public final Object[] move(Location location, int maxMoves){
+    public final Object[] move(Location location){
         int coordX = location.getCoordX();
         int coordY = location.getCoordY();
 
-        return chooseDirection(coordX, coordY, maxMoves);
+        return chooseDirection(coordX, coordY);
     }
-    private Object[] chooseDirection(int coordX, int coordY, int maxMoves){
-        int random = ThreadLocalRandom.current().nextInt(maxMoves);
-        if (coordX == 0 && coordY == 0){
-            int finalX;
-            if (coordX + random <= SimulationSetting.getMaxX()){
-                finalX = coordX + random;
-                return new Object[]{Direction.RIGHT, finalX};
-            } else {
-                while (coordX + random != SimulationSetting.getMaxX()){
-                    random--;
-                }
-                finalX = coordX + random;
-                return new Object[]{Direction.RIGHT, finalX};
+    private Object[] chooseDirection(int coordX, int coordY){
+            if (coordX - 1 >= 0){
+                return new Object[] {Direction.LEFT, coordX - 1, coordY};
+            } else if (coordX + 1 <= SimulationSetting.getMaxX()) {
+                return new Object[] {Direction.RIGHT, coordX + 1, coordY};
+            }else if (coordY - 1 >= 0) {
+                return new Object[] {Direction.UP, coordX , coordY - 1};
+            }else if (coordY + 1 <= SimulationSetting.getMaxY()) {
+                return new Object[] {Direction.DOWN, coordX , coordY + 1};
+            }
 
-            }
-        }else if (coordX == 0){
-            int finalY;
-            if (coordY - random >= 0){
-                finalY = coordY - random;
-                return new Object[]{Direction.UP, finalY};
-            } else {
-                while (coordY - random != 0){
-                    random--;
-                }
-                finalY = coordY - random;
-                return new Object[]{Direction.UP, finalY};
-            }
-        } else if (coordY == 0) {
-            int finalY;
-            if (coordY + random <= SimulationSetting.getMaxY()){
-                finalY = coordY + random;
-                return new Object[] {Direction.DOWN, finalY};
-            }else {
-                while (coordY + random != SimulationSetting.getMaxY()){
-                    random--;
-                }
-                finalY = coordY - random;
-                return new Object[] {Direction.DOWN, finalY};
-            }
-        }else {
-            int finalX;
-            if (coordX - random >= 0){
-                finalX = coordY - random;
-                return new Object[]{Direction.LEFT, finalX};
-            }else {
-                while (coordX - random != 0){
-                    random++;
-                }
-                finalX = coordY - random;
-                return new Object[]{Direction.LEFT, finalX};
-            }
-        }
+        return null;
     }
 
     public abstract void reproduce();

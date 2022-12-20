@@ -14,15 +14,19 @@ public abstract class Predator extends Animal {
 
         if (i == 0) {
             Herbivore herbivore = getHerbivore(location);
-            Integer bound = eatProbability(getHerbivoreToEat(), herbivore);
+            Integer bound = eatProbability(this.getHerbivoreToEat(), herbivore);
             if (isEated(bound, location, herbivore)){
                 return herbivore;
+            } else {
+                System.out.println(this + " cant eat " + herbivore);
             }
         } else {
             Predator predator = getPredator(location);
-            Integer bound = eatProbability(getPredatorToEat(), predator);
+            Integer bound = eatProbability(this.getPredatorToEat(), predator);
             if(isEated(bound, location, predator)){
                 return predator;
+            } else {
+                System.out.println(this + " cant eat " + predator);
             }
         }
 
@@ -39,7 +43,7 @@ public abstract class Predator extends Animal {
 
     private <T> Integer eatProbability(HashMap<Class<? extends Animal>, Integer> hashMap, T animal) {
         for (Map.Entry<Class<? extends Animal>, Integer> element : hashMap.entrySet()) {
-            if (animal.equals(element.getKey())) {
+            if (animal.getClass().equals(element.getKey())) {
                 return element.getValue();
             }
         }
