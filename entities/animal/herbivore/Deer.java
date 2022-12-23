@@ -1,11 +1,12 @@
-package animal.herbivore;
+package entities.animal.herbivore;
 
-import animal.Herbivore;
-import location.Location;
+import entities.animal.Herbivore;
+import entities.location.Location;
 import resources.AnimalSetting;
 
 public class Deer extends Herbivore {
     private AnimalSetting baseSetting;
+    private Object[] caterpillarToEat;
     private int satiety = 0;
     private int moves = 0;
 
@@ -15,22 +16,12 @@ public class Deer extends Herbivore {
 
 
     @Override
-    public void reproduce() {
-
-    }
-
-    @Override
-    public void dying() {
-
-    }
-
-    @Override
     public AnimalSetting getBaseSetting() {
         return baseSetting;
     }
 
     @Override
-    public void eat(Location location) {
-
+    public Object[] getCaterpillarToEat() {
+        return caterpillarToEat;
     }
 }

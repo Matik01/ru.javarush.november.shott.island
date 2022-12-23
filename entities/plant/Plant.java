@@ -1,6 +1,8 @@
-package plant;
+package entities.plant;
 
-public class Plant {
+import util.Organism;
+
+public class Plant implements Organism {
     private int maxOnSquare  = 200;
     private int plantMass = 1;
 

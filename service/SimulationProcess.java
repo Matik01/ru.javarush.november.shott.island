@@ -1,9 +1,6 @@
 package service;
 
-import animal.Animal;
-import animal.Herbivore;
-import animal.Predator;
-import location.Location;
+import entities.location.Location;
 import util.Movement;
 
 import java.util.ArrayList;
@@ -17,16 +14,21 @@ public class SimulationProcess implements Runnable {
     }
 
     private void lifeCycle() {
-        Location location = predatorMove(searchPredatorLocation());
-        for (Predator predator : location.getPredators()) {
-            Animal eat = predator.eat(location);
-            if (eat != null) {
-                System.out.println(predator + " eated " + predator.eat(location));
-            }
-            break;
+        for (Location location : island) {
+            location.getLocationStatistics();
+            System.out.println();
+            System.out.println("---------------------------------------------------------------------------------------------------------------------------");
         }
-        location = herbivoreMove(searchHerbivoreLocation());
-        herbivoreMove(searchHerbivoreLocation());
+//        Location location = predatorMove(searchPredatorLocation());
+//        for (Predator predator : location.getPredators()) {
+//            Animal eat = predator.eat(location);
+//            if (eat != null) {
+//                System.out.println(predator + " eated " + predator.eat(location));
+//            }
+//            break;
+//        }
+//        location = herbivoreMove(searchHerbivoreLocation());
+//        herbivoreMove(searchHerbivoreLocation());
     }
 
     private synchronized int getRandomCoords() {
@@ -54,14 +56,25 @@ public class SimulationProcess implements Runnable {
         return coords;
     }
 
-    private int searchHerbivoreLocation(){
+    private int searchHerbivoreLocation() {
         int coords = getRandomCoords();
         if (island.get(coords).getHerbivores().size() > 0) {
             return coords;
         } else {
-            searchPredatorLocation();
+            searchHerbivoreLocation();
         }
         return coords;
+    }
+
+    private Location searchLocation() {
+        int coords = getRandomCoords();
+        Location location = island.get(coords);
+        if (location.getHerbivores().size() > 0 || location.getPredators().size() > 0) {
+            return location;
+        } else {
+            searchLocation();
+        }
+        return location;
     }
 
     @Override

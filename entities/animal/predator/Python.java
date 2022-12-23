@@ -1,55 +1,46 @@
-package animal.predator;
+package entities.animal.predator;
 
-import animal.Animal;
-import animal.Herbivore;
-import animal.herbivore.*;
+import entities.animal.Animal;
+import entities.animal.herbivore.*;
 import resources.AnimalSetting;
-import animal.Predator;
+import entities.animal.Predator;
 
 import java.util.HashMap;
 
-public class Eagle extends Predator {
+public class Python extends Predator {
     private AnimalSetting baseSetting;
     private int satiety = 0;
     private int moves = 0;
-    private HashMap<Class<? extends Animal>, Integer> herbivoreToEat = new HashMap<>(){
+    private final HashMap<Class<? extends Animal>, Integer> herbivoreToEat = new HashMap<>(){
         {
             put(Horse.class, 0);
             put(Deer.class, 0);
-            put(Bunny.class, 90);
-            put(Mouse.class, 90);
+            put(Bunny.class, 20);
+            put(Mouse.class, 40);
             put(Goat.class, 0);
             put(Sheep.class, 0);
             put(Boar.class, 0);
             put(Buffalo.class, 0);
-            put(Duck.class, 80);
+            put(Duck.class, 10);
             put(Caterpillar.class, 0);
         }
     };
     private HashMap<Class<? extends Animal>, Integer> predatorToEat = new HashMap<>(){
         {
             put(Wolf.class, 0);
-            put(Python.class, 0);
+            put(Fox.class, 15);
             put(Bear.class, 0);
-            put(Fox.class, 10);
+            put(Eagle.class, 0);
         }
     };
 
-    public Eagle(){
-        this.baseSetting = AnimalSetting.getEagleBaseSettings();
+    public Python(){
+        this.baseSetting = AnimalSetting.getPythonBaseSettings();
     }
 
-    @Override
-    public void reproduce() {
 
-    }
 
-    @Override
-    public void dying() {
 
-    }
-
-    @Override
     public AnimalSetting getBaseSetting() {
         return baseSetting;
     }

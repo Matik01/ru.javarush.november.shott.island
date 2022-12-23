@@ -1,14 +1,13 @@
-package animal.predator;
+package entities.animal.predator;
 
-import animal.Animal;
-import animal.Herbivore;
-import animal.herbivore.*;
+import entities.animal.Animal;
+import entities.animal.herbivore.*;
 import resources.AnimalSetting;
-import animal.Predator;
+import entities.animal.Predator;
 
 import java.util.HashMap;
 
-public class Fox extends Predator {
+public class Eagle extends Predator {
     private AnimalSetting baseSetting;
     private int satiety = 0;
     private int moves = 0;
@@ -16,14 +15,14 @@ public class Fox extends Predator {
         {
             put(Horse.class, 0);
             put(Deer.class, 0);
-            put(Bunny.class, 70);
+            put(Bunny.class, 90);
             put(Mouse.class, 90);
             put(Goat.class, 0);
             put(Sheep.class, 0);
             put(Boar.class, 0);
             put(Buffalo.class, 0);
             put(Duck.class, 80);
-            put(Caterpillar.class, 40);
+            put(Caterpillar.class, 0);
         }
     };
     private HashMap<Class<? extends Animal>, Integer> predatorToEat = new HashMap<>(){
@@ -31,23 +30,12 @@ public class Fox extends Predator {
             put(Wolf.class, 0);
             put(Python.class, 0);
             put(Bear.class, 0);
-            put(Eagle.class, 0);
+            put(Fox.class, 10);
         }
     };
 
-    public Fox() {
-        this.baseSetting = AnimalSetting.getFoxBaseSettings();
-    }
-
-
-    @Override
-    public void reproduce() {
-
-    }
-
-    @Override
-    public void dying() {
-
+    public Eagle(){
+        this.baseSetting = AnimalSetting.getEagleBaseSettings();
     }
 
     @Override

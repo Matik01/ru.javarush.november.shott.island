@@ -1,19 +1,18 @@
 package resources;
 
-import animal.Animal;
-import animal.Herbivore;
-import animal.Predator;
-import animal.herbivore.*;
-import animal.predator.*;
-import location.Location;
-import plant.Plant;
+import entities.animal.Animal;
+import entities.animal.Herbivore;
+import entities.animal.Predator;
+import entities.animal.herbivore.*;
+import entities.location.Location;
+import entities.plant.Plant;
+import entities.animal.predator.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class LocationSetting extends SimulationSetting{
+public class LocationSetting extends SimulationSetting {
     private ArrayList<Location> island = new ArrayList<>();
 
     private void createIsland() {
@@ -30,43 +29,41 @@ public class LocationSetting extends SimulationSetting{
         for (Location location : viewIsland) {
             ArrayList<Predator> predators = location.getPredators();
             ArrayList<Herbivore> herbivores = location.getHerbivores();
+            ArrayList<Animal> allAnimals = location.getAllAnimals();
             ArrayList<Plant> plants = location.getPlants();
 
-            int bound = 3;
-            int result = ThreadLocalRandom.current().nextInt(bound);
-
-            if (result == 0) {
-                Plant plant = new Plant();
-                int onSquare = ThreadLocalRandom.current().nextInt(plant.getMaxOnSquare());
-                for (int i = 0; i < onSquare; i++) {
-                    plants.add(plant);
-                }
-            } else if (result == 1) {
-                Predator animal = predatorToCreate();
-                int onSquare = ThreadLocalRandom.current().nextInt(animal.getBaseSetting().getMaxOnSquare());
-                for (int i = 0; i < onSquare; i++) {
-                    predators.add(animal);
-                }
-            } else {
-                Herbivore animal = herbivoreToCreate();
-                int onSquare = ThreadLocalRandom.current().nextInt(animal.getBaseSetting().getMaxOnSquare());
-                for (int i = 0; i < onSquare; i++) {
-                    herbivores.add(animal);
-                }
-
+            Plant plant = new Plant();
+            int onSquare = ThreadLocalRandom.current().nextInt(plant.getMaxOnSquare());
+            for (int i = 0; i < onSquare; i++) {
+                plants.add(plant);
             }
+
+            Predator predator = predatorToCreate();
+            onSquare = ThreadLocalRandom.current().nextInt(predator.getBaseSetting().getMaxOnSquare());
+            for (int i = 0; i < onSquare; i++) {
+                predators.add(predator);
+            }
+
+            Herbivore herbivore = herbivoreToCreate();
+            onSquare = ThreadLocalRandom.current().nextInt(herbivore.getBaseSetting().getMaxOnSquare());
+            for (int i = 0; i < onSquare; i++) {
+                herbivores.add(herbivore);
+            }
+            allAnimals.addAll(predators);
+            allAnimals.addAll(herbivores);
         }
     }
 
-    private Predator predatorToCreate(){
+
+    private Predator predatorToCreate() {
         ArrayList<Predator> listOfAnimals = new ArrayList<>(List.of(new Wolf(), new Python(), new Bear(), new Eagle(), new Fox()));
         int bound = listOfAnimals.size();
         return listOfAnimals.get(ThreadLocalRandom.current().nextInt(bound));
     }
 
-    private Herbivore herbivoreToCreate(){
+    private Herbivore herbivoreToCreate() {
         ArrayList<Herbivore> listOfAnimals = new ArrayList<>(List.of(new Boar(), new Buffalo(), new Bunny(), new Caterpillar(),
-                                                                    new Deer(), new Duck(), new Goat(), new Horse(), new Mouse(), new Sheep()));
+                new Deer(), new Duck(), new Goat(), new Horse(), new Mouse(), new Sheep()));
         int bound = listOfAnimals.size();
         return listOfAnimals.get(ThreadLocalRandom.current().nextInt(bound));
     }

@@ -1,15 +1,5 @@
 package resources;
 
-import animal.Herbivore;
-import animal.Predator;
-import animal.herbivore.*;
-import animal.predator.*;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import static java.util.Map.entry;
-
 public final class AnimalSetting {
     private double animalMass;
     private int maxOnSquare;

@@ -1,12 +1,6 @@
 package service;
 
-import location.Location;
 import resources.LocationSetting;
-import resources.SimulationSetting;
-
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class GameWorker {
     public static void main(String[] args) {

@@ -1,10 +1,9 @@
-package animal.predator;
+package entities.animal.predator;
 
-import animal.Animal;
-import animal.Herbivore;
-import animal.herbivore.*;
+import entities.animal.Animal;
+import entities.animal.herbivore.*;
 import resources.AnimalSetting;
-import animal.Predator;
+import entities.animal.Predator;
 
 import java.util.HashMap;
 
@@ -40,15 +39,6 @@ public class Bear extends Predator {
     }
 
 
-    @Override
-    public void reproduce() {
-
-    }
-
-    @Override
-    public void dying() {
-
-    }
 
     @Override
     public AnimalSetting getBaseSetting() {
