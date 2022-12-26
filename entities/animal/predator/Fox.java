@@ -6,6 +6,7 @@ import resources.AnimalSetting;
 import entities.animal.Predator;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 public class Fox extends Predator {
     private AnimalSetting baseSetting;
@@ -53,5 +54,23 @@ public class Fox extends Predator {
     @Override
     public HashMap<Class<? extends Animal>, Integer> getHerbivoreToEat() {
         return herbivoreToEat;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Fox fox = (Fox) o;
+        return Objects.equals(baseSetting, fox.baseSetting) && Objects.equals(herbivoreToEat, fox.herbivoreToEat) && Objects.equals(predatorToEat, fox.predatorToEat);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(baseSetting, herbivoreToEat, predatorToEat);
+    }
+
+    @Override
+    public String toString() {
+        return "Fox{}";
     }
 }

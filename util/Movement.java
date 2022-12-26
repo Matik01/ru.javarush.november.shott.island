@@ -10,35 +10,20 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Movement {
     ArrayList<Location> island;
-    int coords;
+    Location location;
 
-    public Movement(ArrayList<Location> island, int coords) {
+    public Movement(Location location, ArrayList<Location> island) {
+        this.location = location;
         this.island = island;
-        this.coords = coords;
     }
 
-    public Location animalMove(String animal) {
-        Location location = island.get(coords);
-        if (animal.equals("Predator")) {
+    public <T extends Animal> Location animalMove(T animal) {
+        if (animal instanceof Predator) {
             ArrayList<Predator> predators = location.getPredators();
             return movementChooseDirection(predators, location);
-        } else if (animal.equals("Herbivore")) {
+        } else if (animal instanceof Herbivore) {
             ArrayList<Herbivore> herbivores = location.getHerbivores();
             return movementChooseDirection(herbivores, location);
-        }
-        return null;
-    }
-
-    private <T> Location axisMove(Location location, T animal, ArrayList<T> predators, Object[] move) {
-        if (animal instanceof Predator) {
-            for (int i = 0; i < island.size(); i++) {
-                Location searchLocation = island.get(i);
-                if (searchLocation.getCoordX() == (int) move[1] && searchLocation.getCoordY() == (int) move[2]){
-                    searchLocation.getPredators().add((Predator) animal);
-                    location.getPredators().remove(animal);
-                    return searchLocation;
-                }
-            }
         }
         return null;
     }
@@ -47,7 +32,31 @@ public class Movement {
         T animal = arrayList.get(ThreadLocalRandom.current().nextInt(arrayList.size()));
         Object[] move = animal.move(location);
         Location newLocation = axisMove(location, animal, arrayList, move);
-        System.out.println(animal + " " + move[0]);
         return newLocation;
+    }
+
+    private <T> Location axisMove(Location location, T animal, ArrayList<T> predators, Object[] move) {
+        if (animal instanceof Predator) {
+            for (int i = 0; i < island.size(); i++) {
+                Location searchLocation = island.get(i);
+                if (searchLocation.getCoordX() == (int) move[1] && searchLocation.getCoordY() == (int) move[2]) {
+                    searchLocation.getPredators().add((Predator) animal);
+                    searchLocation.getAllAnimals().add((Animal) animal);
+                    location.getPredators().remove(animal);
+                    return searchLocation;
+                }
+            }
+        } else if (animal instanceof Herbivore){
+            for (int i = 0; i < island.size(); i++) {
+                Location searchLocation = island.get(i);
+                if (searchLocation.getCoordX() == (int) move[1] && searchLocation.getCoordY() == (int) move[2]) {
+                    searchLocation.getHerbivores().add((Herbivore) animal);
+                    searchLocation.getAllAnimals().add((Animal) animal);
+                    location.getHerbivores().remove(animal);
+                    return searchLocation;
+                }
+            }
+        }
+        return null;
     }
 }

@@ -10,7 +10,6 @@ import util.Organism;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Animal implements Organism {
     public abstract AnimalSetting getBaseSetting();
@@ -38,8 +37,7 @@ public abstract class Animal implements Organism {
     public final void reproduce(Location location) {
         ArrayList<Animal> animals = location.getAllAnimals();
         if (animals.size() > 1) {
-            int randomAnimal = ThreadLocalRandom.current().nextInt(animals.size());
-            Animal animal = animals.get(randomAnimal);
+            Animal animal = animals.get(0);
             ArrayList<Animal> newAllAnimals = location.getNewAllAnimals(animal);
 
             if (isReproducible(animal, newAllAnimals)) {
@@ -64,29 +62,25 @@ public abstract class Animal implements Organism {
 
     private Predator pairSearchPredator(Animal animal) {
         Predator predator = (Predator) animal;
-        Predator newPredator = null;
         ArrayList<Predator> listOfAnimals = new ArrayList<>(List.of(new Wolf(), new Python(), new Bear(), new Eagle(), new Fox()));
         for (Predator list : listOfAnimals) {
             if (predator.equals(list)) {
-                newPredator = list;
-                break;
+                return list;
             }
         }
-        return newPredator;
+        return null;
     }
 
     private Herbivore pairSearchHerbivore(Animal animal) {
         Herbivore herbivore = (Herbivore) animal;
-        Herbivore newHerbivore = null;
         ArrayList<Herbivore> listOfAnimals = new ArrayList<>(List.of(new Boar(), new Buffalo(), new Bunny(), new Caterpillar(),
                 new Deer(), new Duck(), new Goat(), new Horse(), new Mouse(), new Sheep()));
         for (Herbivore list : listOfAnimals) {
             if (herbivore.equals(list)) {
-                newHerbivore = list;
-                break;
+                return list;
             }
         }
-        return newHerbivore;
+        return null;
     }
 
     private boolean isReproducible(Animal animal, ArrayList<Animal> animalList) {
@@ -104,8 +98,8 @@ public abstract class Animal implements Organism {
         }
     }
 
-    public final <T extends Animal> void dying(Location location, T animal) {
-        location.getAllAnimals().remove(animal);
+    public final <T extends Animal> void dying(Location location) {
+        location.getAllAnimals().remove(this);
     }
 
 }

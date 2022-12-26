@@ -1,87 +1,62 @@
 package service;
 
+import entities.animal.Animal;
+import entities.animal.Herbivore;
+import entities.animal.Predator;
 import entities.location.Location;
 import util.Movement;
 
 import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class SimulationProcess implements Runnable {
     private ArrayList<Location> island;
+    private Location location;
+
 
     public SimulationProcess(ArrayList<Location> island) {
         this.island = island;
     }
 
-    private void lifeCycle() {
-        for (Location location : island) {
-            location.getLocationStatistics();
-            System.out.println();
-            System.out.println("---------------------------------------------------------------------------------------------------------------------------");
+    private void tasks() {
+        location.getLock().lock();
+        try {
+            int predatorSize = location.getPredators().size();
+            int herbivoreSize = location.getHerbivores().size();
+            if (predatorSize > 0) {
+                Predator predator = location.getPredators().get(0);
+                Animal eat = predator.eat(location);
+                if (eat != null) {
+                    eat.dying(location);
+                }
+                predator.reproduce(location);
+                Movement movement = new Movement(location, island);
+                movement.animalMove(predator);
+            }
+            if (herbivoreSize > 0) {
+                Herbivore herbivore = location.getHerbivores().get(0);
+                herbivore.eat(location);
+                herbivore.reproduce(location);
+                herbivore.move(location);
+            }
+        } finally {
+            location.getLock().unlock();
         }
-//        Location location = predatorMove(searchPredatorLocation());
-//        for (Predator predator : location.getPredators()) {
-//            Animal eat = predator.eat(location);
-//            if (eat != null) {
-//                System.out.println(predator + " eated " + predator.eat(location));
-//            }
-//            break;
-//        }
-//        location = herbivoreMove(searchHerbivoreLocation());
-//        herbivoreMove(searchHerbivoreLocation());
-    }
 
-    private synchronized int getRandomCoords() {
-        int bound = island.size();
-        return ThreadLocalRandom.current().nextInt(bound);
-    }
 
-    private synchronized Location predatorMove(int coords) {
-        Movement movement = new Movement(island, coords);
-        return movement.animalMove("Predator");
-    }
-
-    private synchronized Location herbivoreMove(int coords) {
-        Movement movement = new Movement(island, coords);
-        return movement.animalMove("Herbivore");
-    }
-
-    private int searchPredatorLocation() {
-        int coords = getRandomCoords();
-        if (island.get(coords).getPredators().size() > 0) {
-            return coords;
-        } else {
-            getRandomCoords();
-        }
-        return coords;
-    }
-
-    private int searchHerbivoreLocation() {
-        int coords = getRandomCoords();
-        if (island.get(coords).getHerbivores().size() > 0) {
-            return coords;
-        } else {
-            searchHerbivoreLocation();
-        }
-        return coords;
-    }
-
-    private Location searchLocation() {
-        int coords = getRandomCoords();
-        Location location = island.get(coords);
-        if (location.getHerbivores().size() > 0 || location.getPredators().size() > 0) {
-            return location;
-        } else {
-            searchLocation();
-        }
-        return location;
     }
 
     @Override
     public void run() {
-        lifeCycle();
+        tasks();
     }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
 }
+
 
 
 

@@ -1,8 +1,9 @@
 package entities.animal.herbivore;
 
 import entities.animal.Herbivore;
-import entities.location.Location;
 import resources.AnimalSetting;
+
+import java.util.Objects;
 
 public class Boar extends Herbivore {
     private AnimalSetting baseSetting;
@@ -20,9 +21,26 @@ public class Boar extends Herbivore {
         return baseSetting;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Boar boar = (Boar) o;
+        return Objects.equals(baseSetting, boar.baseSetting);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(baseSetting);
+    }
 
     @Override
     public Object[] getCaterpillarToEat() {
         return caterpillarToEat;
+    }
+
+    @Override
+    public String toString() {
+        return "Boar{}";
     }
 }

@@ -6,6 +6,8 @@ import entities.animal.Predator;
 import entities.plant.Plant;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Location {
     private int coordX;
@@ -13,7 +15,7 @@ public class Location {
     private ArrayList<Predator> predators = new ArrayList<>();
     private ArrayList<Herbivore> herbivores = new ArrayList<>();
     private ArrayList<Animal> allAnimals = new ArrayList<>();
-
+    private ReentrantLock lock = new ReentrantLock(true);
 
 
     private ArrayList<Plant> plants = new ArrayList<>();
@@ -47,18 +49,30 @@ public class Location {
         return allAnimals;
     }
 
-    public ArrayList<Animal> getNewAllAnimals(Animal animal){
+    public ArrayList<Animal> getNewAllAnimals(Animal animal) {
         ArrayList<Animal> newAnimals = new ArrayList<>();
         newAnimals.addAll(allAnimals);
         newAnimals.remove(animal);
         return newAnimals;
     }
 
-    public void getLocationStatistics(){
+    public void getLocationStatistics() {
         StringBuilder animals = new StringBuilder();
-        for (Animal allAnimal : this.getAllAnimals()) {
-            animals.append(allAnimal + "= ");
+        ArrayList<Animal> allAnimals = this.getAllAnimals();
+        Animal newAnimal = null;
+        for (Animal allAnimal : allAnimals) {
+            if (!allAnimal.equals(newAnimal)){
+                int frequency = Collections.frequency(allAnimals, allAnimal);
+                animals.append(allAnimal + "=" + frequency + " ");
+                newAnimal = allAnimal;
+            } else {
+                continue;
+            }
+
         }
-        System.out.printf("%d/%d: %s", this.getCoordX(), this.getCoordY(), animals.toString());
+        System.out.printf("%d/%d: %s", this.getCoordX(), this.getCoordY(), animals);
+    }
+    public ReentrantLock getLock() {
+        return lock;
     }
 }

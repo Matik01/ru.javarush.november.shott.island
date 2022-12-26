@@ -6,6 +6,7 @@ import resources.AnimalSetting;
 import entities.animal.Predator;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 public class Python extends Predator {
     private AnimalSetting baseSetting;
@@ -53,5 +54,23 @@ public class Python extends Predator {
     @Override
     public HashMap<Class<? extends Animal>, Integer> getHerbivoreToEat() {
         return herbivoreToEat;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Python python = (Python) o;
+        return Objects.equals(baseSetting, python.baseSetting) && Objects.equals(herbivoreToEat, python.herbivoreToEat) && Objects.equals(predatorToEat, python.predatorToEat);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(baseSetting, herbivoreToEat, predatorToEat);
+    }
+
+    @Override
+    public String toString() {
+        return "Python{}";
     }
 }
