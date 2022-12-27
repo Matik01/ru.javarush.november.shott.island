@@ -35,14 +35,19 @@ public abstract class Animal implements Organism {
     }
 
     public final void reproduce(Location location) {
-        ArrayList<Animal> animals = location.getAllAnimals();
-        if (animals.size() > 1) {
-            Animal animal = animals.get(0);
-            ArrayList<Animal> newAllAnimals = location.getNewAllAnimals(animal);
+        location.getLock().lock();
+        try {
+            ArrayList<Animal> animals = location.getAllAnimals();
+            if (animals.size() > 1) {
+                Animal animal = animals.get(0);
+                ArrayList<Animal> newAllAnimals = location.getNewAllAnimals(animal);
 
-            if (isReproducible(animal, newAllAnimals)) {
-                pairSearch(animal, newAllAnimals, location);
+                if (isReproducible(animal, newAllAnimals)) {
+                    pairSearch(animal, newAllAnimals, location);
+                }
             }
+        }finally {
+            location.getLock().unlock();
         }
     }
 
@@ -99,7 +104,13 @@ public abstract class Animal implements Organism {
     }
 
     public final <T extends Animal> void dying(Location location) {
-        location.getAllAnimals().remove(this);
+        location.getLock().lock();
+        try {
+            location.getAllAnimals().remove(this);
+        } finally {
+            location.getLock().unlock();
+        }
+
     }
 
 }

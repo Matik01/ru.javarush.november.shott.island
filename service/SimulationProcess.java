@@ -17,34 +17,25 @@ public class SimulationProcess implements Runnable {
         this.island = island;
     }
 
-    private synchronized void tasks() {
-
-        location.getLock().lock();
-        try {
-            int predatorSize = location.getPredators().size();
-            int herbivoreSize = location.getHerbivores().size();
-            Movement movement = new Movement(location, island);
-            if (predatorSize > 0) {
-                Predator predator = location.getPredators().get(0);
-                Animal eat = predator.eat(location);
-                if (eat != null) {
-                    eat.dying(location);
-                }
-                predator.reproduce(location);
-
-                movement.animalMove(predator);
+    private void tasks() {
+        int predatorSize = location.getPredators().size();
+        int herbivoreSize = location.getHerbivores().size();
+        Movement movement = new Movement(location, island);
+        if (predatorSize > 0) {
+            Predator predator = location.getPredators().get(0);
+            Animal eat = predator.eat(location);
+            if (eat != null) {
+                eat.dying(location);
             }
-            if (herbivoreSize > 0) {
-                Herbivore herbivore = location.getHerbivores().get(0);
-                herbivore.eat(location);
-                herbivore.reproduce(location);
-                herbivore.move(location);
-                movement.animalMove(herbivore);
-            }
-        } finally {
-            location.getLock().unlock();
+            predator.reproduce(location);
+            movement.animalMove(predator);
         }
-
+        if (herbivoreSize > 0) {
+            Herbivore herbivore = location.getHerbivores().get(0);
+            herbivore.eat(location);
+            herbivore.reproduce(location);
+            movement.animalMove(herbivore);
+        }
     }
 
 

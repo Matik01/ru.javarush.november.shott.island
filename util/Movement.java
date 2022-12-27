@@ -18,14 +18,19 @@ public class Movement {
     }
 
     public <T extends Animal> Location animalMove(T animal) {
-        if (animal instanceof Predator) {
-            ArrayList<Predator> predators = location.getPredators();
-            return movementChooseDirection(predators, location);
-        } else if (animal instanceof Herbivore) {
-            ArrayList<Herbivore> herbivores = location.getHerbivores();
-            return movementChooseDirection(herbivores, location);
+        location.getLock().lock();
+        try {
+            if (animal instanceof Predator) {
+                ArrayList<Predator> predators = location.getPredators();
+                return movementChooseDirection(predators, location);
+            } else if (animal instanceof Herbivore) {
+                ArrayList<Herbivore> herbivores = location.getHerbivores();
+                return movementChooseDirection(herbivores, location);
+            }
+            return null;
+        }finally {
+            location.getLock().unlock();
         }
-        return null;
     }
 
     private <T extends Animal> Location movementChooseDirection(ArrayList<T> arrayList, Location location) {
@@ -46,7 +51,7 @@ public class Movement {
                     return searchLocation;
                 }
             }
-        } else if (animal instanceof Herbivore){
+        } else if (animal instanceof Herbivore) {
             for (int i = 0; i < island.size(); i++) {
                 Location searchLocation = island.get(i);
                 if (searchLocation.getCoordX() == (int) move[1] && searchLocation.getCoordY() == (int) move[2]) {
