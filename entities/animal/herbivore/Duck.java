@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class Duck extends Herbivore {
     private AnimalSetting baseSetting;
-    private Object[] caterpillarToEat;
+    private int caterpillarToEat = 90;
     private int satiety = 0;
     private int moves = 0;
 
@@ -23,7 +23,7 @@ public class Duck extends Herbivore {
     }
 
     @Override
-    public Object[] getCaterpillarToEat() {
+    public int getCaterpillarToEat() {
         return caterpillarToEat;
     }
 

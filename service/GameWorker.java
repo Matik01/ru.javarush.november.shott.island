@@ -3,6 +3,7 @@ package service;
 import entities.location.Location;
 import resources.LocationSetting;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -11,9 +12,11 @@ import java.util.concurrent.TimeUnit;
 public class GameWorker extends Thread {
     LocationSetting locationSetting;
     SimulationProcess simulationProcess;
+    ArrayList<Location> island;
 
     public GameWorker(LocationSetting locationSetting) {
         this.locationSetting = locationSetting;
+        this.island = locationSetting.getIsland();
     }
 
     @Override
@@ -22,18 +25,18 @@ public class GameWorker extends Thread {
 
         simulationProcess = new SimulationProcess(locationSetting.getIsland());
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(8);
-        executorService.scheduleWithFixedDelay(this::locationRun, 20, 20, TimeUnit.MILLISECONDS);
+        executorService.scheduleWithFixedDelay(this::locationRun, 20, 5000, TimeUnit.MILLISECONDS);
     }
 
 
-    public void locationRun() {
-        ExecutorService fixedThreadPool = Executors.newFixedThreadPool(8);
-        for (Location location : locationSetting.getIsland()) {
+    private synchronized void locationRun() {
+        for (Location location : island) {
             simulationProcess.setLocation(location);
-            fixedThreadPool.submit(simulationProcess);
+            simulationProcess.run();
+
 
         }
-        fixedThreadPool.shutdown();
         locationSetting.simulationStatistics();
+
     }
 }

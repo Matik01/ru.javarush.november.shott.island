@@ -61,17 +61,21 @@ public class Location {
         ArrayList<Animal> allAnimals = this.getAllAnimals();
         Animal newAnimal = null;
         for (Animal allAnimal : allAnimals) {
-            if (!allAnimal.equals(newAnimal)){
+            if (!allAnimal.equals(newAnimal)) {
                 int frequency = Collections.frequency(allAnimals, allAnimal);
                 animals.append(allAnimal + "=" + frequency + " ");
                 newAnimal = allAnimal;
             } else {
                 continue;
             }
-
         }
-        System.out.printf("%d/%d: %s", this.getCoordX(), this.getCoordY(), animals);
+        Plant newPlant = null;
+        if (this.getPlants().size() > 0) {
+            newPlant = this.getPlants().get(0);
+        }
+        System.out.printf("%d/%d: %s, %s:%d", this.getCoordX(), this.getCoordY(), animals, "Plants", Collections.frequency(this.getPlants(), newPlant));
     }
+
     public ReentrantLock getLock() {
         return lock;
     }

@@ -1,30 +1,37 @@
 package entities.animal;
 
-import entities.animal.Animal;
 import entities.animal.herbivore.Caterpillar;
 import entities.location.Location;
 import entities.plant.Plant;
-import util.Organism;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Herbivore extends Animal {
-    public final Organism eat(Location location) {
+    public final void eat(Location location) {
         ArrayList<Plant> plants = location.getPlants();
-        Organism organism = null;
         if (plants.size() > 0) {
             plants.remove(plants.get(0));
         } else {
             ArrayList<Herbivore> allAnimals = location.getHerbivores();
             for (Herbivore caterpillar : allAnimals) {
-                if (caterpillar instanceof Caterpillar){
-                    organism = caterpillar;
+                if (caterpillar instanceof Caterpillar && isEated()){
+                    location.getHerbivores().remove(caterpillar);
+                    location.getAllAnimals().remove(caterpillar);
                 }
             }
         }
-        return organism;
     }
 
-    public abstract Object[] getCaterpillarToEat();
+    private boolean isEated(){
+        int caterpillarToEat = this.getCaterpillarToEat();
+        int random = ThreadLocalRandom.current().nextInt(101);
+        if (random <= caterpillarToEat){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public abstract int getCaterpillarToEat();
 }
