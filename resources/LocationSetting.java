@@ -11,7 +11,6 @@ import entities.animal.predator.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class LocationSetting extends SimulationSetting {
     private ArrayList<Location> island = new ArrayList<>();
@@ -73,7 +72,6 @@ public class LocationSetting extends SimulationSetting {
     public void run() {
         createIsland();
         fillIsland();
-
         System.out.println("Created island");
     }
 

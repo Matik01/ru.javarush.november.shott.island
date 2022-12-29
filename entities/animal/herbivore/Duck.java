@@ -9,8 +9,6 @@ import java.util.Objects;
 public class Duck extends Herbivore {
     private AnimalSetting baseSetting;
     private int caterpillarToEat = 90;
-    private int satiety = 0;
-    private int moves = 0;
 
     public Duck(){
         this.baseSetting = AnimalSetting.getDuckBaseSettings();

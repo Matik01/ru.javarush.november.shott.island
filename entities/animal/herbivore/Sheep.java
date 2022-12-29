@@ -9,8 +9,6 @@ import java.util.Objects;
 public class Sheep extends Herbivore {
     private AnimalSetting baseSetting;
     private int caterpillarToEat;
-    private int satiety = 0;
-    private int moves = 0;
 
     public Sheep(){
         this.baseSetting = AnimalSetting.getSheepBaseSettings();

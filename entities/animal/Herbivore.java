@@ -9,22 +9,19 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Herbivore extends Animal {
     public final void eat(Location location) {
-        location.getLock().lock();
-        try {
-            ArrayList<Plant> plants = location.getPlants();
-            if (plants.size() > 0) {
-                plants.remove(plants.get(0));
-            } else {
-                ArrayList<Herbivore> allAnimals = location.getHerbivores();
-                for (Herbivore caterpillar : allAnimals) {
-                    if (caterpillar instanceof Caterpillar && isEated()) {
-                        location.getHerbivores().remove(caterpillar);
-                        location.getAllAnimals().remove(caterpillar);
-                    }
+        ArrayList<Plant> plants = location.getPlants();
+        if (plants.size() > 0) {
+            plants.remove(plants.get(0));
+        } else {
+            ArrayList<Herbivore> allAnimals = location.getHerbivores();
+            for (Herbivore caterpillar : allAnimals) {
+                if (caterpillar instanceof Caterpillar && isEated()) {
+                    location.getHerbivores().remove(caterpillar);
+                    location.getAllAnimals().remove(caterpillar);
+                } else {
+                    this.starve(location);
                 }
             }
-        }finally {
-            location.getLock().unlock();
         }
     }
 

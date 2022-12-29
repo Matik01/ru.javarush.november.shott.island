@@ -9,8 +9,6 @@ import java.util.Objects;
 public class Deer extends Herbivore {
     private AnimalSetting baseSetting;
     private int caterpillarToEat;
-    private int satiety = 0;
-    private int moves = 0;
 
     public Deer() {
         this.baseSetting = AnimalSetting.getDeerBaseSettings();

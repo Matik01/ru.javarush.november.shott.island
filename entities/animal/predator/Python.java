@@ -10,8 +10,6 @@ import java.util.Objects;
 
 public class Python extends Predator {
     private AnimalSetting baseSetting;
-    private int satiety = 0;
-    private int moves = 0;
     private final HashMap<Class<? extends Animal>, Integer> herbivoreToEat = new HashMap<>(){
         {
             put(Horse.class, 0);

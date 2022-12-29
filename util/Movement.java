@@ -17,20 +17,17 @@ public class Movement {
         this.island = island;
     }
 
+
     public <T extends Animal> Location animalMove(T animal) {
-        location.getLock().lock();
-        try {
-            if (animal instanceof Predator) {
-                ArrayList<Predator> predators = location.getPredators();
-                return movementChooseDirection(predators, location);
-            } else if (animal instanceof Herbivore) {
-                ArrayList<Herbivore> herbivores = location.getHerbivores();
-                return movementChooseDirection(herbivores, location);
-            }
-            return null;
-        }finally {
-            location.getLock().unlock();
+        if (animal instanceof Predator && animal.getBaseSetting().getMaxMoves() > 0) {
+            ArrayList<Predator> predators = location.getPredators();
+            return movementChooseDirection(predators, location);
+        } else if (animal instanceof Herbivore && animal.getBaseSetting().getMaxMoves() > 0) {
+            ArrayList<Herbivore> herbivores = location.getHerbivores();
+            return movementChooseDirection(herbivores, location);
         }
+        return null;
+
     }
 
     private <T extends Animal> Location movementChooseDirection(ArrayList<T> arrayList, Location location) {
@@ -45,10 +42,16 @@ public class Movement {
             for (int i = 0; i < island.size(); i++) {
                 Location searchLocation = island.get(i);
                 if (searchLocation.getCoordX() == (int) move[1] && searchLocation.getCoordY() == (int) move[2]) {
-                    searchLocation.getPredators().add((Predator) animal);
-                    searchLocation.getAllAnimals().add((Animal) animal);
-                    location.getPredators().remove(animal);
-                    return searchLocation;
+                    searchLocation.getLock().lock();
+                    try {
+                        searchLocation.getPredators().add((Predator) animal);
+                        searchLocation.getAllAnimals().add((Animal) animal);
+                        location.getPredators().remove(animal);
+                        location.getAllAnimals().remove(animal);
+                        return searchLocation;
+                    } finally {
+                        searchLocation.getLock().unlock();
+                    }
                 }
             }
         } else if (animal instanceof Herbivore) {

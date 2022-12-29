@@ -8,9 +8,7 @@ import java.util.Objects;
 
 public class Mouse extends Herbivore {
     private AnimalSetting baseSetting;
-    private int caterpillarToEat;
-    private int satiety = 0;
-    private int moves = 0;
+    private int caterpillarToEat = 90;
 
     public Mouse(){
         this.baseSetting = AnimalSetting.getMouseBaseSettings();

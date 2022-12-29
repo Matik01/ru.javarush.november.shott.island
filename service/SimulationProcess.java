@@ -7,6 +7,7 @@ import entities.location.Location;
 import util.Movement;
 
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class SimulationProcess implements Runnable {
     private ArrayList<Location> island;
@@ -22,7 +23,7 @@ public class SimulationProcess implements Runnable {
         int herbivoreSize = location.getHerbivores().size();
         Movement movement = new Movement(location, island);
         if (predatorSize > 0) {
-            Predator predator = location.getPredators().get(0);
+            Predator predator = location.getPredators().get(ThreadLocalRandom.current().nextInt(location.getPredators().size()));
             Animal eat = predator.eat(location);
             if (eat != null) {
                 eat.dying(location);
@@ -31,11 +32,12 @@ public class SimulationProcess implements Runnable {
             movement.animalMove(predator);
         }
         if (herbivoreSize > 0) {
-            Herbivore herbivore = location.getHerbivores().get(0);
+            Herbivore herbivore = location.getHerbivores().get(ThreadLocalRandom.current().nextInt(location.getHerbivores().size()));
             herbivore.eat(location);
             herbivore.reproduce(location);
             movement.animalMove(herbivore);
         }
+
     }
 
 

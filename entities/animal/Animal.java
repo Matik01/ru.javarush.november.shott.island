@@ -10,6 +10,7 @@ import util.Organism;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Animal implements Organism {
     public abstract AnimalSetting getBaseSetting();
@@ -35,20 +36,16 @@ public abstract class Animal implements Organism {
     }
 
     public final void reproduce(Location location) {
-        location.getLock().lock();
-        try {
-            ArrayList<Animal> animals = location.getAllAnimals();
-            if (animals.size() > 1) {
-                Animal animal = animals.get(0);
-                ArrayList<Animal> newAllAnimals = location.getNewAllAnimals(animal);
+        ArrayList<Animal> animals = location.getAllAnimals();
 
-                if (isReproducible(animal, newAllAnimals)) {
-                    pairSearch(animal, newAllAnimals, location);
-                }
-            }
-        }finally {
-            location.getLock().unlock();
+        Animal animal = animals.get(ThreadLocalRandom.current().nextInt(animals.size()));
+        ArrayList<Animal> newAllAnimals = location.getNewAllAnimals(animal);
+
+        if (isReproducible(animal, newAllAnimals)) {
+            pairSearch(animal, newAllAnimals, location);
         }
+
+
     }
 
     private <T extends Animal> void pairSearch(T animal, ArrayList<T> pairList, Location location) {
@@ -57,10 +54,12 @@ public abstract class Animal implements Organism {
                 Predator predator = pairSearchPredator(animal);
                 location.getAllAnimals().add(predator);
                 location.getPredators().add(predator);
+                break;
             } else if (animal.equals(pair) && pair instanceof Herbivore) {
                 Herbivore herbivore = pairSearchHerbivore(animal);
                 location.getAllAnimals().add(herbivore);
                 location.getHerbivores().add(herbivore);
+                break;
             }
         }
     }
@@ -103,14 +102,15 @@ public abstract class Animal implements Organism {
         }
     }
 
-    public final <T extends Animal> void dying(Location location) {
-        location.getLock().lock();
-        try {
-            location.getAllAnimals().remove(this);
-        } finally {
-            location.getLock().unlock();
-        }
+    public final void dying(Location location) {
+        location.getAllAnimals().remove(this);
+    }
 
+    public final void starve(Location location){
+        double satiety = this.getBaseSetting().getMaxSatiety() - 1;
+        if (satiety <= 0){
+            this.dying(location);
+        }
     }
 
 }

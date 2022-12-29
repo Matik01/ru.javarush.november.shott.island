@@ -10,30 +10,31 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Predator extends Animal {
     public final Animal eat(Location location) {
-        location.getLock().lock();
-        try {
-            ArrayList<Animal> allAnimals = location.getAllAnimals();
-            Animal eated = null;
-            for (Animal animalToEat : allAnimals) {
-                if (animalToEat instanceof Predator) {
-                    HashMap<Class<? extends Animal>, Integer> predatorToEat = this.getPredatorToEat();
-                    int bound = eatProbability(predatorToEat, animalToEat);
-                    eated = isEated(bound, location, animalToEat);
-                    if (eated != null) {
-                        return eated;
-                    }
-                } else if (animalToEat instanceof Herbivore) {
-                    int bound = eatProbability(this.getHerbivoreToEat(), animalToEat);
-                    eated = isEated(bound, location, animalToEat);
-                    if (eated != null) {
-                        return eated;
-                    }
+        ArrayList<Animal> allAnimals = location.getAllAnimals();
+        Animal eated = null;
+        for (Animal animalToEat : allAnimals) {
+            if (animalToEat instanceof Predator) {
+                HashMap<Class<? extends Animal>, Integer> predatorToEat = this.getPredatorToEat();
+                int bound = eatProbability(predatorToEat, animalToEat);
+                eated = isEated(bound, location, animalToEat);
+                if (eated != null) {
+                    return eated;
+                } else {
+                    this.starve(location);
+                }
+            } else if (animalToEat instanceof Herbivore) {
+                int bound = eatProbability(this.getHerbivoreToEat(), animalToEat);
+                eated = isEated(bound, location, animalToEat);
+                if (eated != null) {
+                    return eated;
+                } else {
+                    this.starve(location);
+                    return eated;
                 }
             }
-            return eated;
-        } finally {
-            location.getLock().unlock();
         }
+        return eated;
+
     }
 
     private <T> Integer eatProbability(HashMap<Class<? extends Animal>, Integer> hashMap, T animal) {
