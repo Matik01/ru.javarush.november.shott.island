@@ -4,7 +4,9 @@ import entity.location.Location;
 import resource.LocationSetting;
 import resource.SimulationSetting;
 
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Timer;
 import java.util.concurrent.*;
 
 public class GameWorker extends Thread {
@@ -23,7 +25,9 @@ public class GameWorker extends Thread {
         locationSetting.simulationStatistics();
 
         simulationProcess = new SimulationProcess(locationSetting.getIsland());
+        ScheduledExecutorService singleExecutor = Executors.newSingleThreadScheduledExecutor();
         ScheduledExecutorService executorService = Executors.newScheduledThreadPool(CORE_SIZE);
+
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -33,13 +37,15 @@ public class GameWorker extends Thread {
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
+
                 locationSetting.simulationStatistics();
+                singleExecutor.shutdown();
             }
         };
+        singleExecutor.schedule(runnable, SimulationSetting.getGameDuration(), TimeUnit.MILLISECONDS);
 
         for (int i = 0; i < CORE_SIZE; i++) {
             executorService.scheduleWithFixedDelay(this::locationRun, 0, locationSetting.getSimulationDuration(), TimeUnit.MILLISECONDS);
-            executorService.schedule(runnable, SimulationSetting.getGameDuration(), TimeUnit.MILLISECONDS);
         }
 
     }

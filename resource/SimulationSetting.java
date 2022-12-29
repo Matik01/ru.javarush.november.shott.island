@@ -4,7 +4,7 @@ public class SimulationSetting {
     private static int maxX;
     private static int maxY;
     private static int SIMULATION_DURATION;
-    private static int CORE_SIZE = 8;
+    private static int CORE_SIZE = 7;
     private static int GAME_DURATION;
 
     public void setGameDuration(int gameDuration) {
