@@ -1,4 +1,4 @@
-package entities.plant;
+package entity.plant;
 
 import util.Organism;
 

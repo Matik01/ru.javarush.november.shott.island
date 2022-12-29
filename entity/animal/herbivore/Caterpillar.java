@@ -1,17 +1,17 @@
-package entities.animal.herbivore;
+package entity.animal.herbivore;
 
-import entities.animal.Herbivore;
-import resources.AnimalSetting;
+import entity.animal.Herbivore;
+import resource.AnimalSetting;
 
 import java.util.Objects;
 
-public class Goat extends Herbivore {
+public class Caterpillar extends Herbivore {
     private AnimalSetting baseSetting;
     private int caterpillarToEat;
-
-    public Goat(){
-        this.baseSetting = AnimalSetting.getGoatBaseSettings();
+    public Caterpillar(){
+        this.baseSetting = AnimalSetting.getCaterpillarBaseSettings();
     }
+
 
     @Override
     public AnimalSetting getBaseSetting() {
@@ -27,8 +27,8 @@ public class Goat extends Herbivore {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Goat goat = (Goat) o;
-        return Objects.equals(baseSetting, goat.baseSetting);
+        Caterpillar that = (Caterpillar) o;
+        return Objects.equals(baseSetting, that.baseSetting);
     }
 
     @Override
@@ -38,6 +38,6 @@ public class Goat extends Herbivore {
 
     @Override
     public String toString() {
-        return "Goat{}";
+        return "Caterpillar{}";
     }
 }

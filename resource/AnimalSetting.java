@@ -1,4 +1,4 @@
-package resources;
+package resource;
 
 public final class AnimalSetting {
     private double animalMass;

@@ -1,6 +1,6 @@
 package service;
 
-import resources.LocationSetting;
+import resource.LocationSetting;
 
 public class Runner {
     public static void main(String[] args) {

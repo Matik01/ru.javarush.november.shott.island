@@ -1,9 +1,9 @@
 package service;
 
-import entities.animal.Animal;
-import entities.animal.Herbivore;
-import entities.animal.Predator;
-import entities.location.Location;
+import entity.animal.Animal;
+import entity.animal.Herbivore;
+import entity.animal.Predator;
+import entity.location.Location;
 import util.Movement;
 
 import java.util.ArrayList;

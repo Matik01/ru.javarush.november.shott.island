@@ -1,4 +1,4 @@
-package resources;
+package resource;
 
 public class SimulationSetting {
     private static int maxX;

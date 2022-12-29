@@ -1,8 +1,8 @@
-package entities.animal;
+package entity.animal;
 
-import entities.animal.herbivore.Caterpillar;
-import entities.location.Location;
-import entities.plant.Plant;
+import entity.animal.herbivore.Caterpillar;
+import entity.location.Location;
+import entity.plant.Plant;
 
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;

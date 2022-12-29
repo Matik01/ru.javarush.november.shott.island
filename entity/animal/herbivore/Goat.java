@@ -1,19 +1,17 @@
-package entities.animal.herbivore;
+package entity.animal.herbivore;
 
-import entities.animal.Herbivore;
-import entities.location.Location;
-import resources.AnimalSetting;
+import entity.animal.Herbivore;
+import resource.AnimalSetting;
 
 import java.util.Objects;
 
-public class Mouse extends Herbivore {
+public class Goat extends Herbivore {
     private AnimalSetting baseSetting;
-    private int caterpillarToEat = 90;
+    private int caterpillarToEat;
 
-    public Mouse(){
-        this.baseSetting = AnimalSetting.getMouseBaseSettings();
+    public Goat(){
+        this.baseSetting = AnimalSetting.getGoatBaseSettings();
     }
-
 
     @Override
     public AnimalSetting getBaseSetting() {
@@ -29,8 +27,8 @@ public class Mouse extends Herbivore {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Mouse mouse = (Mouse) o;
-        return Objects.equals(baseSetting, mouse.baseSetting);
+        Goat goat = (Goat) o;
+        return Objects.equals(baseSetting, goat.baseSetting);
     }
 
     @Override
@@ -40,6 +38,6 @@ public class Mouse extends Herbivore {
 
     @Override
     public String toString() {
-        return "Mouse{}";
+        return "Goat{}";
     }
 }

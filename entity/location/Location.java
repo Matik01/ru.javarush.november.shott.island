@@ -1,9 +1,9 @@
-package entities.location;
+package entity.location;
 
-import entities.animal.Animal;
-import entities.animal.Herbivore;
-import entities.animal.Predator;
-import entities.plant.Plant;
+import entity.animal.Animal;
+import entity.animal.Herbivore;
+import entity.animal.Predator;
+import entity.plant.Plant;
 
 import java.util.ArrayList;
 import java.util.Collections;

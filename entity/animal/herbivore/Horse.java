@@ -1,17 +1,15 @@
-package entities.animal.herbivore;
+package entity.animal.herbivore;
 
-import entities.location.Location;
-import resources.AnimalSetting;
-import entities.animal.Herbivore;
+import entity.animal.Herbivore;
+import resource.AnimalSetting;
 
 import java.util.Objects;
 
-public class Sheep extends Herbivore {
+public class Horse extends Herbivore {
     private AnimalSetting baseSetting;
     private int caterpillarToEat;
-
-    public Sheep(){
-        this.baseSetting = AnimalSetting.getSheepBaseSettings();
+    public Horse(){
+        this.baseSetting = AnimalSetting.getHorseBaseSettings();
     }
 
 
@@ -29,8 +27,8 @@ public class Sheep extends Herbivore {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Sheep sheep = (Sheep) o;
-        return Objects.equals(baseSetting, sheep.baseSetting);
+        Horse horse = (Horse) o;
+        return Objects.equals(baseSetting, horse.baseSetting);
     }
 
     @Override
@@ -40,6 +38,6 @@ public class Sheep extends Herbivore {
 
     @Override
     public String toString() {
-        return "Sheep{}";
+        return "Horse{}";
     }
 }

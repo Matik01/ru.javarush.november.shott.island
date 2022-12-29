@@ -1,8 +1,8 @@
 package service;
 
-import entities.location.Location;
-import resources.LocationSetting;
-import resources.SimulationSetting;
+import entity.location.Location;
+import resource.LocationSetting;
+import resource.SimulationSetting;
 
 import java.util.ArrayList;
 import java.util.concurrent.*;
@@ -36,6 +36,7 @@ public class GameWorker extends Thread {
                 locationSetting.simulationStatistics();
             }
         };
+
         for (int i = 0; i < CORE_SIZE; i++) {
             executorService.scheduleWithFixedDelay(this::locationRun, 0, locationSetting.getSimulationDuration(), TimeUnit.MILLISECONDS);
             executorService.schedule(runnable, SimulationSetting.getGameDuration(), TimeUnit.MILLISECONDS);

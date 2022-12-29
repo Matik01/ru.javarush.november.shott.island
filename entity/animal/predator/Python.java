@@ -1,43 +1,45 @@
-package entities.animal.predator;
+package entity.animal.predator;
 
-import entities.animal.Animal;
-import entities.animal.herbivore.*;
-import resources.AnimalSetting;
-import entities.animal.Predator;
+import entity.animal.Animal;
+import entity.animal.herbivore.*;
+import resource.AnimalSetting;
+import entity.animal.Predator;
 
 import java.util.HashMap;
 import java.util.Objects;
 
-public class Eagle extends Predator {
+public class Python extends Predator {
     private AnimalSetting baseSetting;
-    private HashMap<Class<? extends Animal>, Integer> herbivoreToEat = new HashMap<>(){
+    private final HashMap<Class<? extends Animal>, Integer> herbivoreToEat = new HashMap<>(){
         {
             put(Horse.class, 0);
             put(Deer.class, 0);
-            put(Bunny.class, 90);
-            put(Mouse.class, 90);
+            put(Bunny.class, 20);
+            put(Mouse.class, 40);
             put(Goat.class, 0);
             put(Sheep.class, 0);
             put(Boar.class, 0);
             put(Buffalo.class, 0);
-            put(Duck.class, 80);
+            put(Duck.class, 10);
             put(Caterpillar.class, 0);
         }
     };
     private HashMap<Class<? extends Animal>, Integer> predatorToEat = new HashMap<>(){
         {
             put(Wolf.class, 0);
-            put(Python.class, 0);
+            put(Fox.class, 15);
             put(Bear.class, 0);
-            put(Fox.class, 10);
+            put(Eagle.class, 0);
         }
     };
 
-    public Eagle(){
-        this.baseSetting = AnimalSetting.getEagleBaseSettings();
+    public Python(){
+        this.baseSetting = AnimalSetting.getPythonBaseSettings();
     }
 
-    @Override
+
+
+
     public AnimalSetting getBaseSetting() {
         return baseSetting;
     }
@@ -56,8 +58,8 @@ public class Eagle extends Predator {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Eagle eagle = (Eagle) o;
-        return Objects.equals(baseSetting, eagle.baseSetting) && Objects.equals(herbivoreToEat, eagle.herbivoreToEat) && Objects.equals(predatorToEat, eagle.predatorToEat);
+        Python python = (Python) o;
+        return Objects.equals(baseSetting, python.baseSetting) && Objects.equals(herbivoreToEat, python.herbivoreToEat) && Objects.equals(predatorToEat, python.predatorToEat);
     }
 
     @Override
@@ -67,6 +69,6 @@ public class Eagle extends Predator {
 
     @Override
     public String toString() {
-        return "Eagle{}";
+        return "Python{}";
     }
 }

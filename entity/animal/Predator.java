@@ -1,7 +1,7 @@
-package entities.animal;
+package entity.animal;
 
 
-import entities.location.Location;
+import entity.location.Location;
 
 import java.util.ArrayList;
 import java.util.HashMap;

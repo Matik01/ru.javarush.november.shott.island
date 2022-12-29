@@ -1,9 +1,9 @@
-package entities.animal.predator;
+package entity.animal.predator;
 
-import entities.animal.Animal;
-import entities.animal.herbivore.*;
-import resources.AnimalSetting;
-import entities.animal.Predator;
+import entity.animal.Animal;
+import entity.animal.herbivore.*;
+import resource.AnimalSetting;
+import entity.animal.Predator;
 
 import java.util.HashMap;
 import java.util.Objects;

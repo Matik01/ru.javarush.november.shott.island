@@ -1,8 +1,7 @@
-package entities.animal.herbivore;
+package entity.animal.herbivore;
 
-import entities.animal.Herbivore;
-import entities.location.Location;
-import resources.AnimalSetting;
+import entity.animal.Herbivore;
+import resource.AnimalSetting;
 
 import java.util.Objects;
 

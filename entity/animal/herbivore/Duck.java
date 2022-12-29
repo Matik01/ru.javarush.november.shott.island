@@ -1,17 +1,16 @@
-package entities.animal.herbivore;
+package entity.animal.herbivore;
 
-import entities.animal.Herbivore;
-import entities.location.Location;
-import resources.AnimalSetting;
+import entity.animal.Herbivore;
+import resource.AnimalSetting;
 
 import java.util.Objects;
 
-public class Deer extends Herbivore {
+public class Duck extends Herbivore {
     private AnimalSetting baseSetting;
-    private int caterpillarToEat;
+    private int caterpillarToEat = 90;
 
-    public Deer() {
-        this.baseSetting = AnimalSetting.getDeerBaseSettings();
+    public Duck(){
+        this.baseSetting = AnimalSetting.getDuckBaseSettings();
     }
 
 
@@ -29,8 +28,8 @@ public class Deer extends Herbivore {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Deer deer = (Deer) o;
-        return Objects.equals(baseSetting, deer.baseSetting);
+        Duck duck = (Duck) o;
+        return Objects.equals(baseSetting, duck.baseSetting);
     }
 
     @Override
@@ -40,6 +39,6 @@ public class Deer extends Herbivore {
 
     @Override
     public String toString() {
-        return "Deer{}";
+        return "Duck{}";
     }
 }

@@ -1,12 +1,12 @@
-package resources;
+package resource;
 
-import entities.animal.Animal;
-import entities.animal.Herbivore;
-import entities.animal.Predator;
-import entities.animal.herbivore.*;
-import entities.location.Location;
-import entities.plant.Plant;
-import entities.animal.predator.*;
+import entity.animal.Animal;
+import entity.animal.Herbivore;
+import entity.animal.Predator;
+import entity.animal.herbivore.*;
+import entity.location.Location;
+import entity.plant.Plant;
+import entity.animal.predator.*;
 
 import java.util.ArrayList;
 import java.util.List;

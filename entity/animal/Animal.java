@@ -1,10 +1,10 @@
-package entities.animal;
+package entity.animal;
 
-import entities.animal.herbivore.*;
-import entities.animal.predator.*;
-import entities.location.Location;
-import resources.AnimalSetting;
-import resources.SimulationSetting;
+import entity.animal.herbivore.*;
+import entity.animal.predator.*;
+import entity.location.Location;
+import resource.AnimalSetting;
+import resource.SimulationSetting;
 import util.Direction;
 import util.Organism;
 
