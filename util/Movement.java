@@ -20,9 +20,13 @@ public class Movement {
 
     public <T extends Animal> Location animalMove(T animal) {
         if (animal instanceof Predator && animal.getBaseSetting().getMaxMoves() > 0) {
+            lowerMaxMoves(animal);
+
             ArrayList<Predator> predators = location.getPredators();
             return movementChooseDirection(predators, location);
         } else if (animal instanceof Herbivore && animal.getBaseSetting().getMaxMoves() > 0) {
+            lowerMaxMoves(animal);
+
             ArrayList<Herbivore> herbivores = location.getHerbivores();
             return movementChooseDirection(herbivores, location);
         }
@@ -73,5 +77,10 @@ public class Movement {
             }
         }
         return null;
+    }
+
+    private <T extends Animal> void lowerMaxMoves(T animal){
+        int moves = animal.getBaseSetting().getMaxMoves() - 1;
+        animal.getBaseSetting().setMaxMoves(moves);
     }
 }

@@ -20,7 +20,7 @@ public abstract class Predator extends Animal {
                 if (eated != null) {
                     return eated;
                 } else {
-                    this.starve(location);
+                    this.starve();
                 }
             } else if (animalToEat instanceof Herbivore) {
                 int bound = eatProbability(this.getHerbivoreToEat(), animalToEat);
@@ -28,7 +28,7 @@ public abstract class Predator extends Animal {
                 if (eated != null) {
                     return eated;
                 } else {
-                    this.starve(location);
+                    this.starve();
                     return eated;
                 }
             }

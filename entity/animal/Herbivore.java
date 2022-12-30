@@ -19,7 +19,7 @@ public abstract class Herbivore extends Animal {
                     location.getHerbivores().remove(caterpillar);
                     location.getAllAnimals().remove(caterpillar);
                 } else {
-                    this.starve(location);
+                    this.starve();
                 }
             }
         }

@@ -104,4 +104,11 @@ public final class AnimalSetting {
         return maxOnSquare;
     }
 
+    public void setMaxSatiety(double maxSatiety) {
+        this.maxSatiety = maxSatiety;
+    }
+
+    public void setMaxMoves(int maxMoves) {
+        this.maxMoves = maxMoves;
+    }
 }

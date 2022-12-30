@@ -106,11 +106,10 @@ public abstract class Animal implements Organism {
         location.getAllAnimals().remove(this);
     }
 
-    public final void starve(Location location){
-        double satiety = this.getBaseSetting().getMaxSatiety() - 1;
-        if (satiety <= 0){
-            this.dying(location);
-        }
+    public final void starve(){
+        double satiety = getBaseSetting().getMaxSatiety() - 1;
+        getBaseSetting().setMaxSatiety(satiety);
+
     }
 
 }

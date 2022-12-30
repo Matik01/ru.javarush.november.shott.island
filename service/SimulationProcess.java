@@ -28,12 +28,18 @@ public class SimulationProcess implements Runnable {
             if (eat != null) {
                 eat.dying(location);
             }
+            if (predator.getBaseSetting().getMaxSatiety() <= 0){
+                predator.dying(location);
+            }
             predator.reproduce(location);
             movement.animalMove(predator);
         }
         if (herbivoreSize > 0) {
             Herbivore herbivore = location.getHerbivores().get(ThreadLocalRandom.current().nextInt(location.getHerbivores().size()));
             herbivore.eat(location);
+            if (herbivore.getBaseSetting().getMaxSatiety() <= 0){
+                herbivore.dying(location);
+            }
             herbivore.reproduce(location);
             movement.animalMove(herbivore);
         }
