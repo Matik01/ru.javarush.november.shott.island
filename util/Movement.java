@@ -43,6 +43,7 @@ public class Movement {
                 Location searchLocation = island.get(i);
                 if (searchLocation.getCoordX() == (int) move[1] && searchLocation.getCoordY() == (int) move[2]) {
                     searchLocation.getLock().lock();
+
                     try {
                         searchLocation.getPredators().add((Predator) animal);
                         searchLocation.getAllAnimals().add((Animal) animal);
@@ -58,10 +59,16 @@ public class Movement {
             for (int i = 0; i < island.size(); i++) {
                 Location searchLocation = island.get(i);
                 if (searchLocation.getCoordX() == (int) move[1] && searchLocation.getCoordY() == (int) move[2]) {
-                    searchLocation.getHerbivores().add((Herbivore) animal);
-                    searchLocation.getAllAnimals().add((Animal) animal);
-                    location.getHerbivores().remove(animal);
-                    return searchLocation;
+                    searchLocation.getLock().lock();
+
+                    try {
+                        searchLocation.getHerbivores().add((Herbivore) animal);
+                        searchLocation.getAllAnimals().add((Animal) animal);
+                        location.getHerbivores().remove(animal);
+                        return searchLocation;
+                    } finally {
+                        searchLocation.getLock().unlock();
+                    }
                 }
             }
         }
