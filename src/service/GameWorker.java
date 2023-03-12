@@ -1,70 +1,43 @@
 package service;
 
+import entity.animal.Animal;
 import entity.location.Location;
-import resource.LocationSetting;
 import resource.SimulationSetting;
 
-import java.util.ArrayList;
+import java.util.Map;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
-public class GameWorker extends Thread {
-    private LocationSetting locationSetting;
-    private SimulationProcess simulationProcess;
-    private ArrayList<Location> island;
-    private final int CORE_SIZE = SimulationSetting.getCoreSize();
+public class GameWorker {
+    private TaskProducer taskProducer;
+    private TaskConsumer taskConsumer;
+    private ConcurrentLinkedQueue<LocationTask> taskQueue = new ConcurrentLinkedQueue<>();
 
-    public GameWorker(LocationSetting locationSetting) {
-        this.locationSetting = locationSetting;
-        this.island = locationSetting.getIsland();
+    public GameWorker() {
+        this.taskProducer = new TaskProducer(taskQueue);
+        this.taskConsumer = new TaskConsumer(taskQueue);
     }
 
-    @Override
-    public void run() {
-        locationSetting.simulationStatistics();
+    public void start() {
+        ScheduledExecutorService service = Executors.newScheduledThreadPool(5);
+        ExecutorService executorService = Executors.newFixedThreadPool(3);
 
-        simulationProcess = new SimulationProcess(locationSetting.getIsland());
-        ScheduledExecutorService singleExecutor = Executors.newSingleThreadScheduledExecutor();
-        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(CORE_SIZE);
+        executorService.execute(taskProducer);
+        for (int i = 0; i < 4; i++) {
+            service.scheduleAtFixedRate(taskConsumer, 1000, SimulationSetting.getSimulationDuration(), TimeUnit.MILLISECONDS);
+        }
 
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                executorService.shutdown();
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-
-                locationSetting.simulationStatistics();
-                singleExecutor.shutdown();
-            }
+        Runnable cancelTask = () ->{
+            service.shutdown();
+            executorService.shutdown();
         };
-        singleExecutor.schedule(runnable, SimulationSetting.getGameDuration(), TimeUnit.MILLISECONDS);
-
-        for (int i = 0; i < CORE_SIZE; i++) {
-            executorService.scheduleWithFixedDelay(this::locationRun, 0, locationSetting.getSimulationDuration(), TimeUnit.MILLISECONDS);
-        }
-
-    }
+        service.schedule(cancelTask, SimulationSetting.getGameDuration(), TimeUnit.MILLISECONDS);
 
 
-    private void locationRun() {
-        synchronized (island) {
-            Location location = island.get(ThreadLocalRandom.current().nextInt(island.size()));
-            location.getLock().lock();
-            try {
-                simulationProcess.setLocation(location);
-                simulationProcess.run();
-                location.getLocationStatistics();
-                System.out.println();
-                System.out.println("---------------------------------------------------------");
-            } finally {
-                location.getLock().unlock();
-            }
-        }
+
 
     }
 
 
 }
+

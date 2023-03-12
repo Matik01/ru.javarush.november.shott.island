@@ -1,24 +1,19 @@
 package entity.location;
 
 import entity.animal.Animal;
-import entity.animal.herbivore.Herbivore;
-import entity.animal.predator.Predator;
 import entity.plant.Plant;
+import util.AnimalFood;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Location {
     private int coordX;
     private int coordY;
-    private ArrayList<Predator> predators = new ArrayList<>();
-    private ArrayList<Herbivore> herbivores = new ArrayList<>();
-    private ArrayList<Animal> allAnimals = new ArrayList<>();
-    private ReentrantLock lock = new ReentrantLock(true);
-
-
-    private ArrayList<Plant> plants = new ArrayList<>();
+    private final List<Animal> animals = new ArrayList<>();
+    private final List<Plant> plants = new ArrayList<>();
 
     public Location(int coordX, int coordY) {
         this.coordX = coordX;
@@ -33,56 +28,33 @@ public class Location {
         return coordX;
     }
 
-    public ArrayList<Plant> getPlants() {
+    public List<Plant> getPlants() {
         return plants;
     }
 
-    public ArrayList<Herbivore> getHerbivores() {
-        return herbivores;
+    public List<Animal> getAnimals() {
+        return animals;
     }
 
-    public ArrayList<Predator> getPredators() {
-        return predators;
+    public List<Animal> getPredatorAnimals() {
+        return animals.stream().filter(Animal::isPredator).collect(Collectors.toList());
     }
 
-    public ArrayList<Animal> getAllAnimals() {
-        return allAnimals;
+    public List<Animal> getHerbivoreAnimals() {
+        return animals.stream().filter(a -> !a.isPredator()).collect(Collectors.toList());
     }
 
-    public ArrayList<Animal> getNewAllAnimals(Animal animal) {
-        ArrayList<Animal> newAnimals = new ArrayList<>();
-        newAnimals.addAll(allAnimals);
-        newAnimals.remove(animal);
-        return newAnimals;
+    public List<Animal> copyListWithoutAnimal(Animal animal) {
+        List<Animal> copyAnimals = new ArrayList<>(List.copyOf(this.animals));
+        copyAnimals.remove(animal);
+        return copyAnimals;
     }
 
-    public void getLocationStatistics() {
-        StringBuilder animals = new StringBuilder();
-        ArrayList<Animal> allAnimals = this.getAllAnimals();
-        ArrayList<Animal> newAnimal = new ArrayList<>();
-        for (Animal allAnimal : allAnimals) {
-            if (!allAnimal.equals(newAnimal)) {
-                if (!newAnimal.contains(allAnimal)){
-                    newAnimal.add(allAnimal);
-                    int frequency = Collections.frequency(allAnimals, allAnimal);
-                    animals.append(allAnimal + "=" + frequency + " ");
-                } else {
-                    continue;
-                }
-            } else {
-                continue;
-            }
+    public final void dying(AnimalFood animalFood) {
+        if (animalFood instanceof Animal) {
+            this.getAnimals().remove(animalFood);
+        } else if (animalFood instanceof Plant) {
+            this.getPlants().remove(animalFood);
         }
-        Plant newPlant = null;
-        if (this.getPlants().size() > 0) {
-            newPlant = this.getPlants().get(0);
-        }
-
-        System.out.printf("%d/%d: %s, %s:%d", this.getCoordX(), this.getCoordY(), animals, "Plants", Collections.frequency(this.getPlants(), newPlant));
-
-    }
-
-    public ReentrantLock getLock() {
-        return lock;
     }
 }

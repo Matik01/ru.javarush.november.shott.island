@@ -1,86 +1,58 @@
 package util;
 
 import entity.animal.Animal;
-import entity.animal.herbivore.*;
-import entity.animal.predator.*;
 import entity.location.Location;
+import resource.SimulationSetting;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Movement {
-    ArrayList<Location> island;
+    List<Location> island;
     Location location;
+    Animal animalToMove;
 
-    public Movement(Location location, ArrayList<Location> island) {
+    public Movement(Location location, Animal animal) {
         this.location = location;
-        this.island = island;
+        this.island = SimulationSetting.getIsland();
+        this.animalToMove = animal;
     }
 
+    public List<Location> findPossibleLocations() {
+        List<Location> locationList = new ArrayList<>();
+        int coordX = location.getCoordX();
+        int coordY = location.getCoordY();
+        float maxMoveSize = animalToMove.getMaxMoveSize();
 
-    public <T extends Animal> Location animalMove(T animal) {
-        if (animal instanceof Predator && animal.getBaseSetting().getMaxMoves() > 0) {
-            lowerMaxMoves(animal);
-
-            ArrayList<Predator> predators = location.getPredators();
-            return movementChooseDirection(predators, location);
-        } else if (animal instanceof Herbivore && animal.getBaseSetting().getMaxMoves() > 0) {
-            lowerMaxMoves(animal);
-
-            ArrayList<Herbivore> herbivores = location.getHerbivores();
-            return movementChooseDirection(herbivores, location);
+        if (coordX - maxMoveSize >= 0) {
+            Location locationToMove = island.get(coordX - randomMoveSize(maxMoveSize));
+            locationList.add(locationToMove);
         }
-        return null;
-
-    }
-
-    private <T extends Animal> Location movementChooseDirection(ArrayList<T> arrayList, Location location) {
-        T animal = arrayList.get(ThreadLocalRandom.current().nextInt(arrayList.size()));
-        Object[] move = animal.move(location);
-        Location newLocation = axisMove(location, animal, arrayList, move);
-        return newLocation;
-    }
-
-    private <T> Location axisMove(Location location, T animal, ArrayList<T> predators, Object[] move) {
-        if (animal instanceof Predator) {
-            for (int i = 0; i < island.size(); i++) {
-                Location searchLocation = island.get(i);
-                if (searchLocation.getCoordX() == (int) move[1] && searchLocation.getCoordY() == (int) move[2]) {
-                    searchLocation.getLock().lock();
-
-                    try {
-                        searchLocation.getPredators().add((Predator) animal);
-                        searchLocation.getAllAnimals().add((Animal) animal);
-                        location.getPredators().remove(animal);
-                        location.getAllAnimals().remove(animal);
-                        return searchLocation;
-                    } finally {
-                        searchLocation.getLock().unlock();
-                    }
-                }
-            }
-        } else if (animal instanceof Herbivore) {
-            for (int i = 0; i < island.size(); i++) {
-                Location searchLocation = island.get(i);
-                if (searchLocation.getCoordX() == (int) move[1] && searchLocation.getCoordY() == (int) move[2]) {
-                    searchLocation.getLock().lock();
-
-                    try {
-                        searchLocation.getHerbivores().add((Herbivore) animal);
-                        searchLocation.getAllAnimals().add((Animal) animal);
-                        location.getHerbivores().remove(animal);
-                        return searchLocation;
-                    } finally {
-                        searchLocation.getLock().unlock();
-                    }
-                }
-            }
+        if (coordX + maxMoveSize <= SimulationSetting.getMaxX()) {
+            Location locationToMove = island.get(coordX + randomMoveSize(maxMoveSize));
+            locationList.add(locationToMove);
         }
-        return null;
+        if (coordY - maxMoveSize >= 0) {
+            Location locationToMove = island.get(coordY - randomMoveSize(maxMoveSize));
+            locationList.add(locationToMove);
+        }
+        if (coordY + maxMoveSize <= SimulationSetting.getMaxY()) {
+            Location locationToMove = island.get(coordY + randomMoveSize(maxMoveSize));
+            locationList.add(locationToMove);
+        }
+        return locationList;
     }
 
-    private <T extends Animal> void lowerMaxMoves(T animal){
-        int moves = animal.getBaseSetting().getMaxMoves() - 1;
-        animal.getBaseSetting().setMaxMoves(moves);
+    private int randomMoveSize(float maxMoveSize) {
+        if (maxMoveSize > 0) {
+            return (int) ThreadLocalRandom.current().nextFloat(maxMoveSize);
+        } else {
+            return 0;
+        }
+        //Exception in thread "main" java.lang.IllegalArgumentException: bound must be finite and positive
     }
+
 }
+
+

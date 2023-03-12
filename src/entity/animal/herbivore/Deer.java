@@ -1,43 +1,26 @@
 package entity.animal.herbivore;
 
+import entity.animal.Animal;
+import entity.animal.predator.Bear;
+import entity.animal.predator.Wolf;
 import resource.AnimalSetting;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class Deer extends Herbivore {
-    private AnimalSetting baseSetting;
-    private int caterpillarToEat;
-
     public Deer() {
-        this.baseSetting = AnimalSetting.getDeerBaseSettings();
+       super(new AnimalSetting(300, 20, 4, 50));
     }
 
 
     @Override
-    public AnimalSetting getBaseSetting() {
-        return baseSetting;
-    }
-
-    @Override
-    public int getCaterpillarToEat() {
-        return caterpillarToEat;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Deer deer = (Deer) o;
-        return Objects.equals(baseSetting, deer.baseSetting);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(baseSetting);
-    }
-
-    @Override
-    public String toString() {
-        return "Deer{}";
+    public Map<Class<? extends Animal>, Short> getHuntersWithRiskFactor() {
+        Map<Class<? extends Animal>, Short> huntersWithRiskFactor = new HashMap<>() {{
+            put(Wolf.class, (short) 15);
+            put(Bear.class, (short) 80);
+        }};
+        return huntersWithRiskFactor;
     }
 }

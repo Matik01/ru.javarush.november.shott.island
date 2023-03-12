@@ -1,117 +1,115 @@
 package entity.animal;
 
-import entity.animal.herbivore.Herbivore;
-import entity.animal.predator.Predator;
+import util.AnimalFood;
+import util.Reproducible;
 import entity.animal.herbivore.*;
 import entity.animal.predator.*;
 import entity.location.Location;
 import resource.AnimalSetting;
-import resource.SimulationSetting;
-import util.Direction;
-import util.Organism;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Stream;
 
-public abstract class Animal implements Organism {
-    public abstract AnimalSetting getBaseSetting();
+public abstract class Animal implements AnimalFood, Reproducible {
 
-    public final Object[] move(Location location) {
-        int coordX = location.getCoordX();
-        int coordY = location.getCoordY();
+    private final AnimalSetting animalSetting;
 
-        return chooseDirection(coordX, coordY);
+    protected Animal(AnimalSetting animalSetting) {
+        this.animalSetting = animalSetting;
     }
 
-    private Object[] chooseDirection(int coordX, int coordY) {
-        if (coordX - 1 >= 0) {
-            return new Object[]{Direction.LEFT, coordX - 1, coordY};
-        } else if (coordX + 1 <= SimulationSetting.getMaxX()) {
-            return new Object[]{Direction.RIGHT, coordX + 1, coordY};
-        } else if (coordY - 1 >= 0) {
-            return new Object[]{Direction.UP, coordX, coordY - 1};
-        } else if (coordY + 1 <= SimulationSetting.getMaxY()) {
-            return new Object[]{Direction.DOWN, coordX, coordY + 1};
-        }
-        return null;
+    public final float getMaxOnSquare() {
+        return animalSetting.maxOnSquare;
     }
 
-    public final void reproduce(Location location) {
-        ArrayList<Animal> animals = location.getAllAnimals();
-
-        Animal animal = animals.get(ThreadLocalRandom.current().nextInt(animals.size()));
-        ArrayList<Animal> newAllAnimals = location.getNewAllAnimals(animal);
-
-        if (isReproducible(animal, newAllAnimals)) {
-            pairSearch(animal, newAllAnimals, location);
-        }
-
-
+    public final float getMaxMoveSize() {
+        return animalSetting.maxMoves;
     }
 
-    private <T extends Animal> void pairSearch(T animal, ArrayList<T> pairList, Location location) {
-        for (T pair : pairList) {
-            if (animal.equals(pair) && pair instanceof Predator) {
-                Predator predator = pairSearchPredator(animal);
-                location.getAllAnimals().add(predator);
-                location.getPredators().add(predator);
-                break;
-            } else if (animal.equals(pair) && pair instanceof Herbivore) {
-                Herbivore herbivore = pairSearchHerbivore(animal);
-                location.getAllAnimals().add(herbivore);
-                location.getHerbivores().add(herbivore);
-                break;
-            }
-        }
+    public abstract boolean isPredator();
+
+    public void starve() {
+        this.animalSetting.maxSatiety = this.animalSetting.maxSatiety - 0.5;
     }
 
-    private Predator pairSearchPredator(Animal animal) {
-        Predator predator = (Predator) animal;
-        ArrayList<Predator> listOfAnimals = new ArrayList<>(List.of(new Wolf(), new Python(), new Bear(), new Eagle(), new Fox()));
-        for (Predator list : listOfAnimals) {
-            if (predator.equals(list)) {
-                return list;
-            }
-        }
-        return null;
+    public AnimalSetting getAnimalSetting() {
+        return animalSetting;
     }
 
-    private Herbivore pairSearchHerbivore(Animal animal) {
-        Herbivore herbivore = (Herbivore) animal;
-        ArrayList<Herbivore> listOfAnimals = new ArrayList<>(List.of(new Boar(), new Buffalo(), new Bunny(), new Caterpillar(),
-                new Deer(), new Duck(), new Goat(), new Horse(), new Mouse(), new Sheep()));
-        for (Herbivore list : listOfAnimals) {
-            if (herbivore.equals(list)) {
-                return list;
-            }
+    @Override
+    public final boolean escapeFrom(Animal hunter) {
+        final Map<Class<? extends Animal>, Short> huntersWithRiskFactor = getHuntersWithRiskFactor();
+        if (huntersWithRiskFactor.isEmpty()) {
+            return true;
         }
-        return null;
-    }
 
-    private boolean isReproducible(Animal animal, ArrayList<Animal> animalList) {
-        int maxOnSquare = animal.getBaseSetting().getMaxOnSquare();
-        int count = 1;
-        for (Animal pair : animalList) {
-            if (animal.equals(pair)) {
-                count++;
-            }
-        }
-        if (count >= maxOnSquare) {
-            return false;
+        final Short riskFactor = huntersWithRiskFactor.get(hunter.getClass());
+        if (riskFactor != null) {
+            // Count escape probability
+            return riskFactor - ThreadLocalRandom.current().nextInt(0, 100) <= 0;
         } else {
             return true;
         }
+        //Exception in thread "main" java.lang.NullPointerException: Cannot invoke "java.lang.Short.shortValue()" because "riskFactor" is null
     }
 
-    public final void dying(Location location) {
-        location.getAllAnimals().remove(this);
+    /**
+     * @param food
+     * @return true if food was eaten
+     */
+    public boolean tryToEat(AnimalFood food) {
+        return !food.escapeFrom(this);
     }
 
-    public final void starve(){
-        double satiety = getBaseSetting().getMaxSatiety() - 1;
-        getBaseSetting().setMaxSatiety(satiety);
+    public Location chooseLocation(List<Location> locationList) {
+        if (!locationList.isEmpty()) {
+            return locationList.get(ThreadLocalRandom.current().nextInt(locationList.size()));
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public final void pairSearch(Location location) {
+        List<Animal> animals = location.getAnimals();
+        Animal animal = animals.get(ThreadLocalRandom.current().nextInt(animals.size()));
+
+        animals = location.copyListWithoutAnimal(animal);
+        if (!isLocationFull(animal, animals)) {
+            for (Animal pair : animals) {
+                if (animal.equals(pair)) {
+                    Animal pairObject = getPairObject(animal);
+                    location.getAnimals().add(pairObject);
+                    break;
+                }
+            }
+        }
+    }
+
+    private Animal getPairObject(Animal animal) {
+        return Stream.of(new Wolf(), new Python(), new Bear(), new Eagle(), new Fox(), new Boar(),
+                        new Buffalo(), new Bunny(), new Caterpillar(),
+                        new Deer(), new Duck(), new Goat(), new Horse(), new Mouse(), new Sheep()
+                ).filter(x -> x.equals(animal))
+                .findAny()
+                .orElse(animal);
+
 
     }
 
+    private boolean isLocationFull(Animal animal, List<Animal> animalList) {
+        float maxOnSquare = animal.getMaxOnSquare();
+        int count = 1;
+        count += animalList.stream()
+                .distinct()
+                .count();
+
+        if (count >= maxOnSquare) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
